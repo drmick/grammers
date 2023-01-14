@@ -181,20 +181,30 @@ impl<R: tl::RemoteCall<Return = tl::enums::messages::Messages>> IterBuffer<R, Me
 pub type MessageIter = IterBuffer<tl::functions::messages::GetHistory, Message>;
 
 impl MessageIter {
-    fn new(client: &Client, peer: PackedChat) -> Self {
+    fn new(
+        client: &Client,
+        peer: PackedChat,
+        offset_id: Option<i32>,
+        offset_date: Option<i32>,
+        add_offset: Option<i32>,
+        limit: Option<i32>,
+        max_id: Option<i32>,
+        min_id: Option<i32>,
+        hash: Option<i64>,
+    ) -> Self {
         // TODO let users tweak all the options from the request
         Self::from_request(
             client,
             MAX_LIMIT,
             tl::functions::messages::GetHistory {
                 peer: peer.to_input_peer(),
-                offset_id: 0,
-                offset_date: 0,
-                add_offset: 0,
-                limit: 0,
-                max_id: 0,
-                min_id: 0,
-                hash: 0,
+                offset_id: offset_id.unwrap_or_default(),
+                offset_date: offset_date.unwrap_or_default(),
+                add_offset: add_offset.unwrap_or_default(),
+                limit: limit.unwrap_or_default(),
+                max_id: max_id.unwrap_or_default(),
+                min_id: min_id.unwrap_or_default(),
+                hash: hash.unwrap_or_default(),
             },
         )
     }
@@ -739,8 +749,28 @@ impl Client {
     /// # Ok(())
     /// # }
     /// ```
-    pub fn iter_messages<C: Into<PackedChat>>(&self, chat: C) -> MessageIter {
-        MessageIter::new(self, chat.into())
+    pub fn iter_messages<C: Into<PackedChat>>(
+        &self,
+        chat: C,
+        offset_id: Option<i32>,
+        offset_date: Option<i32>,
+        add_offset: Option<i32>,
+        limit: Option<i32>,
+        max_id: Option<i32>,
+        min_id: Option<i32>,
+        hash: Option<i64>,
+    ) -> MessageIter {
+        MessageIter::new(
+            self,
+            chat.into(),
+            offset_id,
+            offset_date,
+            add_offset,
+            limit,
+            max_id,
+            min_id,
+            hash,
+        )
     }
 
     /// Iterate over the messages that match certain search criteria.
