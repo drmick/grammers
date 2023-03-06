@@ -38,7 +38,7 @@ pub struct Message {
     // server response contains a lot of chats, and some might be related to deep layers of
     // a message action for instance. Keeping the entire set like this allows for cheaper clones
     // and moves, and saves us from worrying about picking out all the chats we care about.
-    pub(crate) chats: Arc<types::ChatMap>,
+    pub chats: Arc<types::ChatMap>,
 }
 
 impl Message {
