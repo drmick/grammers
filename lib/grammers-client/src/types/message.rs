@@ -193,6 +193,10 @@ impl Message {
         self.msg.edit_hide
     }
 
+    pub fn reactions(&self) -> Option<&grammers_tl_types::enums::MessageReactions> {
+        self.msg.reactions.as_ref()
+    }
+
     /// Whether this message is currently pinned or not.
     pub fn pinned(&self) -> bool {
         self.msg.pinned
@@ -570,6 +574,7 @@ impl fmt::Debug for Message {
             .field("grouped_id", &self.grouped_id())
             .field("restriction_reason", &self.restriction_reason())
             .field("action", &self.action())
+            // .field("reactions", &self.msg.reactions)
             .finish()
     }
 }
