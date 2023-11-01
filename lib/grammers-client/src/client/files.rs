@@ -13,11 +13,13 @@ use futures_util::future::try_join_all;
 use grammers_mtsender::InvocationError;
 use grammers_tl_types as tl;
 use std::{io::SeekFrom, path::Path, sync::Arc};
+use std::io::Error;
 use tokio::sync::mpsc::unbounded_channel;
 use tokio::{
     fs,
     io::{self, AsyncRead, AsyncReadExt, AsyncSeekExt, AsyncWriteExt},
 };
+use grammers_tl_types::enums::MessageMedia;
 
 pub const MIN_CHUNK_SIZE: i32 = 4 * 1024;
 pub const MAX_CHUNK_SIZE: i32 = 512 * 1024;
@@ -461,6 +463,16 @@ impl Client {
         let name = path.file_name().unwrap().to_string_lossy().to_string();
 
         self.upload_stream(&mut file, size, name).await
+    }
+
+    pub async fn upload_media<P: AsRef<Path>>(&self, peer: grammers_tl_types::enums::InputPeer, media: grammers_tl_types::enums::InputMedia) -> Result<MessageMedia, Error> {
+        self
+            .invoke(&tl::functions::messages::UploadMedia {
+                peer,
+                media,
+            })
+            .await
+            .map_err(|e| io::Error::new(io::ErrorKind::Other, e))
     }
 }
 
