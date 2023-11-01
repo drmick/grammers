@@ -461,7 +461,7 @@ impl Client {
         self.upload_stream(&mut file, size, name).await
     }
 
-    pub async fn upload_media<P: AsRef<Path>>(&self, peer: grammers_tl_types::enums::InputPeer, media: grammers_tl_types::enums::InputMedia) -> Result<MessageMedia, Error> {
+    pub async fn upload_media(&self, peer: grammers_tl_types::enums::InputPeer, media: grammers_tl_types::enums::InputMedia) -> Result<MessageMedia, Error> {
         self
             .invoke(&tl::functions::messages::UploadMedia {
                 peer,
