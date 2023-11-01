@@ -444,10 +444,6 @@ impl Client {
     /// use grammers_client::InputMessage;
     ///
     /// let uploaded_file = client.upload_file("/home/username/photos/holidays.jpg").await?;
-    ///
-    /// client.send_message(&chat, InputMessage::text("Check this out!").photo(uploaded_file)).await?;
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// [`InputMessage`]: crate::InputMessage
