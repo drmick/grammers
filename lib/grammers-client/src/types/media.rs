@@ -92,6 +92,8 @@ impl Photo {
         })
     }
 
+
+
     fn to_input_media(&self) -> tl::types::InputMediaPhoto {
         use tl::{
             enums::{InputPhoto as eInputPhoto, Photo},
@@ -118,6 +120,13 @@ impl Photo {
         match self.photo.photo.as_ref().unwrap() {
             P::Empty(photo) => photo.id,
             P::Photo(photo) => photo.id,
+        }
+    }
+
+    pub fn get_refdata(&self) -> Option<(i64, Vec<u8>)> {
+        match self.photo.photo.as_ref() {
+            Some(tl::enums::Photo::Photo(d)) => Some((d.access_hash, d.file_reference.clone())),
+            _ => None,
         }
     }
 
@@ -225,6 +234,13 @@ impl Document {
     pub fn mime_type(&self) -> Option<&str> {
         match self.document.document.as_ref() {
             Some(tl::enums::Document::Document(d)) => Some(d.mime_type.as_str()),
+            _ => None,
+        }
+    }
+
+    pub fn get_refdata(&self) -> Option<(i64, Vec<u8>)> {
+        match self.document.document.as_ref() {
+            Some(tl::enums::Document::Document(d)) => Some((d.access_hash, d.file_reference.clone())),
             _ => None,
         }
     }
